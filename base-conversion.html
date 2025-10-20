@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>進数変換</title>
+</head>
+<body>
+  <h2>2進数->10進数</h2>
+  <div>
+    2進数:<input type="text" id="2to10">
+    <br />
+    <button id="change" onclick="change2to10()">変換</button>
+    <br />
+    10進数:<span id="2to10_result"></span>
+  </div>
+  <h2>10進数->2進数</h2>
+  <div>
+    10進数:<input type="text" id="10to2">
+    <br />
+    <button id="change" onclick="change10to2()">変換</button>
+    <br />
+    2進数:<span id="10to2_result"></span>
+  </div>
+  <script>
+    function change2to10() {
+      document.getElementById("2to10_result").innerText = parseInt(document.getElementById("2to10").value, 2)
+    }
+    function change10to2() {
+      document.getElementById("10to2_result").innerText = parseInt(document.getElementById("10to2").value).toString(2).padStart(8, "0")
+    }
+  </script>
+</body>
+</html>
