@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IPアドレス</title>
+</head>
+<body>
+  <h2>IPアドレス</h2>
+  <div>
+    IPアドレス:<input type="text" id="ip_addr">
+    <br>
+    ネットマスク:<input type="text" id="net_masc">
+  </div>
+  <button id="change" onclick="change()">変換</button>
+  <br />
+  <div>
+    ネットワーク:<span id="network_addr"></span>
+    <br>
+    ブロードキャスト:<span id="broadcast_addr"></span>
+    <br>
+    割り当て可能なIPの開始アドレス:<span id="start_addr"></span>
+    <br>
+    割り当て可能なIPの終了アドレス:<span id="end_addr"></span>
+  </div>
+  <script>
+    function logic_inversion(num) {
+      const str = num.toString(2)
+      const replaced_str = str.padStart(8, '0').replace(/0|1/g, (match) => (match === '0' ? '1' : '0'))
+      console.log(str, str.padStart(8, '0'), replaced_str, parseInt(replaced_str, 2))
+      return parseInt(replaced_str, 2)
+    }
+    function change() {
+      const ip_addr = document.getElementById("ip_addr").value.split(".").map(n => parseInt(n))
+      const net_masc = document.getElementById("net_masc").value.split(".").map(n => parseInt(n))
+      const network_addr = [], broadcast_addr = []
+      for (let i = 0; i < 4; i++) {
+        network_addr.push(ip_addr[i] & net_masc[i])
+        broadcast_addr.push(ip_addr[i] | logic_inversion(net_masc[i]))
+      }
+      document.getElementById("network_addr").innerText = network_addr.join(".")
+      document.getElementById("broadcast_addr").innerText = broadcast_addr.join(".")
+      const start_addr = network_addr.concat()
+      start_addr[3] = start_addr[3] + 1
+      document.getElementById("start_addr").innerText = start_addr.join(".")
+      const end_addr = broadcast_addr.concat()
+      end_addr[3] = end_addr[3] - 1
+      document.getElementById("end_addr").innerText = end_addr.join(".")
+    }
+  </script>
+</body>
+</html>
