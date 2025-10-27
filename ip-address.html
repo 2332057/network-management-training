@@ -8,11 +8,15 @@
 <body>
   <h2>IPアドレス</h2>
   <div>
-    IPアドレス:<input type="text" id="ip_addr">
+    <label>
+      IPアドレス:<input type="text" id="ip_addr">
+    </label>
     <br>
-    ネットマスク:<input type="text" id="net_masc">
+    <label>
+      ネットマスク:<input type="text" id="net_masc">
+    </label>
   </div>
-  <button id="change" onclick="change()">変換</button>
+  <button id="change" onclick="change()">変換</button><span id="message" style="color: red;"></span>
   <br />
   <div>
     ネットワーク:<span id="network_addr"></span>
@@ -24,6 +28,7 @@
     割り当て可能なIPの終了アドレス:<span id="end_addr"></span>
   </div>
   <script>
+    const ipRegex = /^((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])\.){3}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[1-9][0-9]|[0-9])$/
     function logic_inversion(num) {
       const str = num.toString(2)
       const replaced_str = str.padStart(8, '0').replace(/0|1/g, (match) => (match === '0' ? '1' : '0'))
@@ -31,8 +36,13 @@
       return parseInt(replaced_str, 2)
     }
     function change() {
-      const ip_addr = document.getElementById("ip_addr").value.split(".").map(n => parseInt(n))
-      const net_masc = document.getElementById("net_masc").value.split(".").map(n => parseInt(n))
+      const ip_addr_elm = document.getElementById("ip_addr")
+      const net_masc_elm = document.getElementById("net_masc")
+      if(!ipRegex.test(ip_addr_elm.value)) return document.getElementById("message").innerText = "IPアドレスの形式が間違っています"
+      if(!ipRegex.test(net_masc_elm.value)) return document.getElementById("message").innerText = "ネットマスクの形式が間違っています"
+      document.getElementById("message").innerText = ""
+      const ip_addr = ip_addr_elm.value.split(".").map(n => parseInt(n))
+      const net_masc = net_masc_elm.value.split(".").map(n => parseInt(n))
       const network_addr = [], broadcast_addr = []
       for (let i = 0; i < 4; i++) {
         network_addr.push(ip_addr[i] & net_masc[i])
